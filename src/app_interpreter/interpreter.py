@@ -3,11 +3,19 @@ from collections import deque
 
 
 class Evaluator:
+    def __init__(self) -> None:
+        self.variables = {}
+
     def evaluate_program(self, program_text):
         lines = [line for line in program_text.split(
             "\n") if line.strip() != ""]
         for line in lines:
-            print(self.evaluate_arithmetic(line))
+            (variable, equal_symbol, expression) = line.split(maxsplit=2)
+            if equal_symbol == "=":
+                self.variables[variable] = self.evaluate_arithmetic(expression)
+            else:
+                result = self.evaluate_arithmetic(line)
+                self.variables[result] = result
 
     def evaluate_arithmetic(self, expression):
         """Postfix notation arithmetic evaluation
@@ -21,6 +29,8 @@ class Evaluator:
         for t in tokens:
             if t.isdigit():
                 stack.append(int(t))
+            elif t in self.variables:
+                stack.append(self.variables[t])
             elif t == "+":
                 rhs = stack.pop()
                 lhs = stack.pop()
