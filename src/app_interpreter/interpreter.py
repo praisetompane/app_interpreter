@@ -1,0 +1,46 @@
+import sys
+from collections import deque
+
+
+class Evaluator:
+    def evaluate_program(self, program_text):
+        lines = [line for line in program_text.split(
+            "\n") if line.strip() != ""]
+        for line in lines:
+            print(self.evaluate_arithmetic(line))
+
+    def evaluate_arithmetic(self, expression):
+        """Postfix notation arithmetic evaluation
+
+        Args:
+            program_string (str): _description_
+        """
+        tokens = expression.split()
+        stack = deque()
+
+        for t in tokens:
+            if t.isdigit():
+                stack.append(int(t))
+            elif t == "+":
+                rhs = stack.pop()
+                lhs = stack.pop()
+                stack.append(lhs + rhs)
+
+            elif t == "*":
+                pass
+            elif t == "/":
+                pass
+            elif t == "-":
+                pass
+            else:
+                raise NotImplementedError(
+                    f"Unsupported operation {t} provided")
+
+        return stack.pop()
+
+
+if __name__ == "__main__":
+    # program_file = open(sys.argv[1])
+    program_text = open("tests/app_interpreter/addition.txt").read()
+    interpreter = Evaluator()
+    interpreter.evaluate_program(program_text)
