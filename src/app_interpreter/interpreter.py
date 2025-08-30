@@ -31,22 +31,18 @@ class Evaluator:
                 stack.append(int(t))
             elif t in self.variables:
                 stack.append(self.variables[t])
-            elif t == "+":
+            else:
                 rhs = stack.pop()
                 lhs = stack.pop()
-                stack.append(lhs + rhs)
+                if t == "+":stack.append(lhs + rhs)
+                elif t == "*": stack.append(lhs * rhs)
+                elif t == "/": pass
+                elif t == "-": stack.append(lhs - rhs)
+                else:
+                    raise NotImplementedError(
+                        f"Unsupported operation {t} provided")
 
-            elif t == "*":
-                pass
-            elif t == "/":
-                pass
-            elif t == "-":
-                pass
-            else:
-                raise NotImplementedError(
-                    f"Unsupported operation {t} provided")
-
-        return stack.pop()
+        return stack[0]
 
 
 if __name__ == "__main__":
