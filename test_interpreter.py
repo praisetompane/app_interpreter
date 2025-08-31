@@ -3,8 +3,8 @@ from src.app_interpreter.interpreter import Evaluator
 
 def test_addition():
     interpreter = Evaluator()
-    assert 5 == interpreter.evaluate_arithmetic("1 4 + ")
-
+    interpreter.evaluate_program("1 4 + ")
+    assert {5:5} == interpreter.variables
 
 def test_program_file_parsing():
     interpreter = Evaluator()
@@ -44,4 +44,4 @@ if __name__ == "__main__":
     test_addition_with_variables()
     test_subtraction()
     test_multiplication()
-    # test_factorial()
+    test_factorial()
