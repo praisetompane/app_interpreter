@@ -13,6 +13,7 @@ praisetompane
 
 
 # domain specific
+Postfix
 
 
 # institutions
@@ -25,4 +26,6 @@ praisetompane
 
 
 # urls
-
+https
+svg
+yaml
