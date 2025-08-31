@@ -1,12 +1,12 @@
-from collections import deque
-import argparse
+from app_interpreter.arithmetic_evaluator import ArithmeticEvaluator
 
-class Evaluator:
+class Interpreter:
     def __init__(self) -> None:
         self.variables = {}
         self._instruction_pointer = 0
+        self._arithmetic_expression_evaluator = ArithmeticEvaluator()
 
-    def evaluate_program(self, program_text):
+    def evaluate(self, program_text):
         def extract_statement(text):
             return text.split(maxsplit=1)[0]
 
@@ -19,7 +19,7 @@ class Evaluator:
             match statement:
                 case "while":
                     _, expression = instruction_register.split(maxsplit=1)
-                    if self.evaluate_arithmetic(expression):
+                    if self._arithmetic_expression_evaluator.evaluate(expression, self.variables):
                         # move to the body of while loop
                         self._instruction_pointer += 1
                     else:
@@ -33,57 +33,15 @@ class Evaluator:
                         # until its expressions evaluates to false and we move the instruction pointer past the while loop's end
                         while extract_statement(instructions[self._instruction_pointer]) != "while":
                             self._instruction_pointer -= 1
-                case _: # assume non while instructions are assignments or literal expressions
+                case _: # assume all other instructions are assignments or literal expressions
                     (variable, equal_symbol, expression) = instruction_register.split(maxsplit=2)
                     if equal_symbol == "=":
-                        self.variables[variable] = self.evaluate_arithmetic(expression)
+                        self.variables[variable] = self._arithmetic_expression_evaluator.evaluate(expression, self.variables)
                     else:
                         # store literals as an identity of key and value, where key = value
-                        result = self.evaluate_arithmetic(instruction_register)
+                        result = self._arithmetic_expression_evaluator.evaluate(instruction_register, self.variables)
                         self.variables[result] = result
                     self._instruction_pointer += 1
 
         return self.variables
 
-    def evaluate_arithmetic(self, arithmetic_expression):
-        """Postfix notation arithmetic evaluation
-
-        Args:
-            arithmetic_expression (str): Arithmetic expression ton evaluate.
-        """
-        tokens = arithmetic_expression.split()
-        stack = deque()
-
-        for t in tokens:
-            if t.isdigit():
-                stack.append(int(t))
-            elif t in self.variables:
-                stack.append(self.variables[t])
-            else:
-                rhs = stack.pop()
-                lhs = stack.pop()
-                if t == "+": stack.append(lhs + rhs)
-                elif t == "*": stack.append(lhs * rhs)
-                elif t == "/": pass
-                elif t == "-": stack.append(lhs - rhs)
-                elif t == ">=":
-                    # 1 pushed onto stack for true
-                    # 0 pushed onto stack for false
-                    if lhs >= rhs: stack.append(1)
-                    else: stack.append(0)
-                else:
-                    raise NotImplementedError(
-                        f"Unsupported operation {t} provided")
-
-        return stack[0]
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser("python src/app_interpreter/interpreter.py ./tests/resources/factorial.txt")
-    parser.add_argument("program_file")
-
-    args = parser.parse_args()
-    program_text = open(args.program_file).read()
-
-    interpreter = Evaluator()
-    print(interpreter.evaluate_program(program_text))

@@ -1,8 +1,11 @@
 # abbreviation
+dev
+src
+py
+txt
 
 
 # acronyms
-
 
 
 # authors
@@ -17,15 +20,23 @@ Postfix
 
 
 # institutions
-
+freecodecamp
 
 # places
 
 
 # technology
+devcontainers
+pytest
 
 
 # urls
 https
 svg
 yaml
+bd
+conventionalcommits
+goodpractices
+visualstudio
+df
+fb
