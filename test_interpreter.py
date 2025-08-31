@@ -32,11 +32,23 @@ def test_multiplication():
     interpreter.evaluate_program(program_text)
     assert {8: 8} == interpreter.variables
 
+def test_while_loop_truth_case():
+    interpreter = Evaluator()
+    program_text = open("tests/resources/while_truth_case.txt").read()
+    interpreter.evaluate_program(program_text)
+    assert {'n': 0} == interpreter.variables
+
+def test_while_loop_false_case():
+    interpreter = Evaluator()
+    program_text = open("tests/resources/while_false_case.txt").read()
+    interpreter.evaluate_program(program_text)
+    assert {'n': 5, 'y': 10} == interpreter.variables
+
 def test_factorial():
     interpreter = Evaluator()
     program_text = open("tests/resources/factorial.txt").read()
     interpreter.evaluate_program(program_text)
-    assert {'factorial': '120'}
+    assert {'n': 0, 'factorial': 120} == interpreter.variables
 
 if __name__ == "__main__":
     test_addition()
@@ -44,4 +56,6 @@ if __name__ == "__main__":
     test_addition_with_variables()
     test_subtraction()
     test_multiplication()
+    test_while_loop_truth_case()
+    test_while_loop_false_case()
     test_factorial()
