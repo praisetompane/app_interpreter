@@ -1,5 +1,8 @@
-from app_interpreter.interpreter import Interpreter
+from app_interpreter.control_unit import ControlUnit
+from app_interpreter.arithmetic_logic_unit import ArithmeticLogicUnit
 
+
+# TODO: write CLI app test
 def test_app():
-    interpreter = Interpreter()
-    assert {1:1} == interpreter.evaluate("11 10 >=")
+    interpreter = ControlUnit(ArithmeticLogicUnit())
+    assert {1: 1} == interpreter.execute("11 10 >=")
